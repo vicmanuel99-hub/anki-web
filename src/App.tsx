@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import StudyMode from "./Studymode";
 import "./styles.css";
+import Agregar from "./Agregar";
 
-export type Card = {
+export type Card = { //estructura de initialCards
   id: number;
   status: "not-studied" | "learning" | "ready" | "mastered";
   word: string;
@@ -10,14 +11,27 @@ export type Card = {
 };
 
 export const initialCards: Card[] = [
-  { id: 1, status: "learning", word: "two-faced", translation: "doble cara" },
-  { id: 2, status: "ready", word: "narrow-minded", translation: "de mente cerrada" },
-  { id: 3, status: "not-studied", word: "well-behaved", translation: "bien educado" },
+  { id: 1,
+    status: "learning",
+    word: "two-faced",
+    translation: "doble cara" },
+  {
+    id: 2,
+    status: "ready",
+    word: "narrow-minded",
+    translation: "de mente cerrada",
+  },
+  {
+    id: 3,
+    status: "not-studied",
+    word: "well-behaved",
+    translation: "bien educado",
+  },
 ];
 
-const App = () => {
-  const [cards, setCards] = useState<Card[]>(initialCards);
-  const [studyMode, setStudyMode] = useState(false);
+function App() {
+  const [cards, setCards] = useState<Card[]>(initialCards); //cards se queda con todos las cartas
+  const [stateMode, setStateMode] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
 
@@ -27,12 +41,12 @@ const App = () => {
       setCurrentIndex(currentIndex + 1);
     } else {
       alert("Deck terminado 🎉");
-      setStudyMode(false);
+      setStateMode(0);
       setCurrentIndex(0);
     }
   };
 
-  const updateCardStatus = (newStatus: Card["status"]) => {
+  function updateCardStatus(newStatus: Card["status"]) {
     const updatedCards = cards.map((card, index) => {
       if (index === currentIndex) {
         return { ...card, status: newStatus };
@@ -41,31 +55,58 @@ const App = () => {
     });
 
     setCards(updatedCards);
-    nextCard();
-  };
+    nextCard(); //para avanzar a la sg carta
+  }
+
+  function agregarCards(a:string, b: string) {
+  
+    setCards([
+  ...cards,
+  {
+    id: cards.length + 1, //id dinamico, se asigna el siguiente numero disponible
+    status: "not-studied",
+    word: a,
+    translation: b
+  }
+    ]);
+     
+  }
 
   // 📊 Estadísticas dinámicas
   const totalDeck = cards.length;
 
-  const notStudied = cards.filter(c => c.status === "not-studied").length;
-  const learning = cards.filter(c => c.status === "learning").length;
-  const ready = cards.filter(c => c.status === "ready").length;
-  const mastered = cards.filter(c => c.status === "mastered").length;
+  const notStudied = cards.filter((c) => c.status === "not-studied").length;
+  const learning = cards.filter((c) => c.status === "learning").length;
+  const ready = cards.filter((c) => c.status === "ready").length;
+  const mastered = cards.filter((c) => c.status === "mastered").length;
 
   const safeTotal = totalDeck || 1; // evita división por 0
 
-  if (studyMode) {
+  if (stateMode === 1) {
+    return (
+      <StudyMode
+        cards={cards}
+        currentIndex={currentIndex}
+        flipped={flipped}
+        setFlipped={setFlipped}
+        updateCardStatus={updateCardStatus}
+        setStateMode={setStateMode}
+      />
+    );
+  }
 
-        return (
-    <StudyMode
-      cards={cards}
-      currentIndex={currentIndex}
-      flipped={flipped}
-      setFlipped={setFlipped}
-      updateCardStatus={updateCardStatus}
-    />
-  );
+  if (stateMode === 2) {
 
+    return (
+      <>
+        {
+          <Agregar
+            setStateMode={setStateMode}
+            agreguemosBro={agregarCards} //envio agregarCards al hijo, solo va nombre
+          />
+        }
+      </>
+    );
   }
 
   return (
@@ -115,30 +156,27 @@ const App = () => {
       </div>
 
       <div className="search">
-        <input placeholder="Search..." />
-        <button className="add-btn">+</button>
+        <input placeholder="Search__ " />
+        <button className="add-btn" onClick={() => setStateMode(2)}>
+          +
+        </button>
       </div>
 
       <div className="card-list ">
         {cards.map((card) => (
           <div key={card.id} className="card-item rounded-4 shadow-sm p-3">
-            <small>
-              {card.status}
-            </small>
+            <small>{card.status}</small>
             <h4>{card.word}</h4>
             <p>{card.translation}</p>
           </div>
         ))}
       </div>
 
-      <button
-        className="study-btn"
-        onClick={() => setStudyMode(true)}
-      >
+      <button className="study-btn" onClick={() => setStateMode(1)}>
         Study deck
       </button>
     </div>
   );
-};
+}
 
 export default App;

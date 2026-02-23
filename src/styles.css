@@ -72,15 +72,17 @@ body {
   border-radius: 4px;
   overflow: hidden;
   margin-top: 10px;
-  background: #ddd;
+  background: #d4c3c3;
 }
 
 .learning {
   background: #8ab58d;
+  height: 100%;
 }
 
 .mastered {
   background: #4c5cff;
+
 }
 
 .stats {
