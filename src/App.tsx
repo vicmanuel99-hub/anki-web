@@ -11,10 +11,12 @@ export type Card = { //estructura de initialCards
 };
 
 export const initialCards: Card[] = [
-  { id: 1,
+  {
+    id: 1,
     status: "learning",
     word: "two-faced",
-    translation: "doble cara" },
+    translation: "doble cara"
+  },
   {
     id: 2,
     status: "ready",
@@ -34,6 +36,7 @@ function App() {
   const [stateMode, setStateMode] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
+  const [search, setSearch] = useState("");
 
   const nextCard = () => {
     setFlipped(false);
@@ -58,18 +61,18 @@ function App() {
     nextCard(); //para avanzar a la sg carta
   }
 
-  function agregarCards(a:string, b: string) {
-  
+  function agregarCards(a: string, b: string) {
+
     setCards([
-  ...cards,
-  {
-    id: cards.length + 1, //id dinamico, se asigna el siguiente numero disponible
-    status: "not-studied",
-    word: a,
-    translation: b
-  }
+      ...cards,
+      {
+        id: cards.length + 1, //id dinamico, se asigna el siguiente numero disponible
+        status: "not-studied",
+        word: a,
+        translation: b
+      }
     ]);
-     
+
   }
 
   // 📊 Estadísticas dinámicas
@@ -156,20 +159,30 @@ function App() {
       </div>
 
       <div className="search">
-        <input placeholder="Search__ " />
+        <input
+          placeholder="Search..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)} //filtra las cards mientras escribo
+        />
         <button className="add-btn" onClick={() => setStateMode(2)}>
           +
         </button>
       </div>
 
       <div className="card-list ">
-        {cards.map((card) => (
-          <div key={card.id} className="card-item rounded-4 shadow-sm p-3">
-            <small>{card.status}</small>
-            <h4>{card.word}</h4>
-            <p>{card.translation}</p>
-          </div>
-        ))}
+        {cards
+          .filter(
+            (card) =>
+              card.word.toLowerCase().includes(search.toLowerCase()) ||
+              card.translation.toLowerCase().includes(search.toLowerCase())
+          )
+          .map((card) => (
+            <div key={card.id} className="card-item rounded-4 shadow-sm p-3">
+              <small>{card.status}</small>
+              <h4>{card.word}</h4>
+              <p>{card.translation}</p>
+            </div>
+          ))}
       </div>
 
       <button className="study-btn" onClick={() => setStateMode(1)}>

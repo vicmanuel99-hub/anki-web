@@ -10,14 +10,17 @@ function Agregar({ setStateMode, agreguemosBro }: agregarProps) {
   const [front, setFront] = useState("");
   const [back, setBack] = useState("");
 
-  
+  const handleAdd = () => { // una f que puede tener varias f para que el boton tenga accion
+    agreguemosBro(front, back);
+    setFront("");
+    setBack("");
+  };
+
   return (
     <div className="newcard-container">
       <div className="header">
         <h2>New card</h2>
-        <button className="check-btn" onClick={()=>{  agreguemosBro(front, back);setFront("");setBack("");  }     }>
-          ✓
-        </button>
+        <button className="check-btn" onClick={handleAdd}>✓</button>
       </div>
 
       <div className="field">
@@ -40,12 +43,10 @@ function Agregar({ setStateMode, agreguemosBro }: agregarProps) {
           onChange={(e) => setBack(e.target.value)}
           className="input focus-green"
         />
-
-
-
       </div>
+
       <button onClick={() => setStateMode(0)}>principal</button>
-      </div>
+    </div>
   );
 }
 
