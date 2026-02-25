@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import StudyMode from "./Studymode";
 import "./styles.css";
 import Agregar from "./Agregar";
@@ -10,33 +10,25 @@ export type Card = { //estructura de initialCards
   translation: string;
 };
 
-export const initialCards: Card[] = [
-  {
-    id: 1,
-    status: "learning",
-    word: "two-faced",
-    translation: "doble cara"
-  },
-  {
-    id: 2,
-    status: "ready",
-    word: "narrow-minded",
-    translation: "de mente cerrada",
-  },
-  {
-    id: 3,
-    status: "not-studied",
-    word: "well-behaved",
-    translation: "bien educado",
-  },
-];
+
+const API = "http://localhost:3000";
+
 
 function App() {
-  const [cards, setCards] = useState<Card[]>(initialCards); //cards se queda con todos las cartas
+  const [cards, setCards] = useState<Card[]>([]); //arranca vacío, se llena desde el backend
   const [stateMode, setStateMode] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [search, setSearch] = useState("");
+
+  // Cargar cartas desde el backend al iniciar
+  useEffect(() => {
+    fetch(`${API}/cartas`)
+      .then((res) => res.json())
+      .then((data) => setCards(data))
+      .catch((err) => console.error("Error al cargar cartas:", err));
+  }, []); //[] = solo se ejecuta una vez al montar el componente
+
 
   const nextCard = () => {
     setFlipped(false);
@@ -61,19 +53,22 @@ function App() {
     nextCard(); //para avanzar a la sg carta
   }
 
-  function agregarCards(a: string, b: string) {
+  async function agregarCards(a: string, b: string) {
+    try {
+      const res = await fetch(`${API}/cartas`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ word: a, translation: b }),
+      });
 
-    setCards([
-      ...cards,
-      {
-        id: cards.length + 1, //id dinamico, se asigna el siguiente numero disponible
-        status: "not-studied",
-        word: a,
-        translation: b
-      }
-    ]);
+      const newCard = await res.json(); //el backend nos devuelve la carta creada
+      setCards([...cards, newCard]);
 
+    } catch (err) {
+      console.error("Error al agregar carta:", err);
+    }
   }
+
 
   // 📊 Estadísticas dinámicas
   const totalDeck = cards.length;
