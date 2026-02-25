@@ -135,6 +135,28 @@ body {
   font-size: 12px;
 }
 
+.card-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  opacity: 0.4;
+  transition: opacity 0.2s;
+  padding: 0;
+  line-height: 1;
+}
+
+.delete-btn:hover {
+  opacity: 1;
+}
+
 .in-month {
   color: #8ab58d;
 }
@@ -173,7 +195,7 @@ body {
   border-radius: 16px;
   font-size: 24px;
   cursor: pointer;
-  box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .study-buttons {

@@ -60,12 +60,19 @@ function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ word: a, translation: b }),
       });
-
       const newCard = await res.json(); //el backend nos devuelve la carta creada
       setCards([...cards, newCard]);
-
     } catch (err) {
       console.error("Error al agregar carta:", err);
+    }
+  }
+
+  async function eliminarCard(id: number) {
+    try {
+      await fetch(`${API}/cartas/${id}`, { method: "DELETE" });
+      setCards(cards.filter((c) => c.id !== id)); //saco la carta del estado sin recargar
+    } catch (err) {
+      console.error("Error al eliminar carta:", err);
     }
   }
 
@@ -173,7 +180,15 @@ function App() {
           )
           .map((card) => (
             <div key={card.id} className="card-item rounded-4 shadow-sm p-3">
-              <small>{card.status}</small>
+              <div className="card-item-header">
+                <small>{card.status}</small>
+                <button
+                  className="delete-btn"
+                  onClick={() => eliminarCard(card.id)}
+                >
+                  🗑
+                </button>
+              </div>
               <h4>{card.word}</h4>
               <p>{card.translation}</p>
             </div>
