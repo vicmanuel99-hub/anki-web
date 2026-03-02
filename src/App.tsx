@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import   { useState, useEffect } from "react";
 import StudyMode from "./Studymode";
 import "./styles.css";
 import Agregar from "./Agregar";
