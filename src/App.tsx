@@ -10,9 +10,9 @@ export type Card = { //estructura de initialCards
   translation: string;
 };
 
-
 //const API = "http://localhost:3000";
-const API = "https://anki-web-backend.onrender.com";
+//const API = "https://anki-web-backend.onrender.com"; //backend produccion
+const API = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 
 function App() {
