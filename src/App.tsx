@@ -11,7 +11,8 @@ export type Card = { //estructura de initialCards
 };
 
 
-const API = "http://localhost:3000";
+//const API = "http://localhost:3000";
+const API = "https://anki-web-backend.onrender.com";
 
 
 function App() {
